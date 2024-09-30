@@ -36,6 +36,33 @@ const onEdit=(ele)=>{
     ;
 }
 
+const onRemove=(ele)=>{
+    Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!"
+      }).then((result) => {
+        if (result.isConfirmed) {
+            let removeId=ele.closest("li").id;
+            let getIndex=todoArr.findIndex(todo=>todo.todoId===removeId);
+        
+            todoArr.splice(getIndex,1);
+            localStorage.setItem("todoArr", JSON.stringify(todoArr));
+            ele.closest("li").remove();
+
+            snackbar("this todoitem remove is successfully!", "success");
+        }
+      });
+      
+          
+    
+    
+}
+
 const snackbar=(title,icon)=>{
     swal.fire({
         title:title,
@@ -112,7 +139,7 @@ const onUpdateBtn=()=>{
 
     let updateId=localStorage.getItem("editId");
 
-    cl(updateId);
+    
     let updateObj={
         todoitem:todoitemControl.value,
         todoId:updateId,
