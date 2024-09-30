@@ -19,7 +19,8 @@
                         <label for="todoitem">todoitem</label>
                         <input type="text" class="form-control" id="todoitem">
                     </div>
-                    <button type="submit" class="btn btn-sm btn-block btn-outline-success">Add todo</button>
+                    <button type="submit" class="btn btn-sm btn-block btn-outline-success" id="AddBtn">Add todo</button>
+                    <button type="button" class="btn btn-sm btn-block btn-outline-success d-none" id="updateBtn">Update todo</button>
                 </form>
             </div>
             <div class="col-md-6" id="todoContainer">
@@ -29,6 +30,8 @@
             </div>
         </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="./assets/js/app.js"></script>
 </body>
 </html>

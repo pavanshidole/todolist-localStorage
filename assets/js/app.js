@@ -3,6 +3,8 @@ const cl=console.log;
 const todoForm=document.getElementById("todoForm");
 const todoContainer=document.getElementById("todoContainer");
 const todoitemControl=document.getElementById("todoitem");
+const AddBtn=document.getElementById("AddBtn");
+const updateBtn=document.getElementById("updateBtn");
 
 
 function uuid() {
@@ -21,6 +23,28 @@ let todoArr=[
     // }
 ]
 
+const onEdit=(ele)=>{
+    let editId=ele.closest("li").id;
+
+    localStorage.setItem("editId", editId);
+
+    let getObj=todoArr.find(todo=>todo.todoId===editId);
+
+    todoitemControl.value=getObj.todoitem;
+    AddBtn.classList.add("d-none");
+    updateBtn.classList.remove("d-none");
+    ;
+}
+
+const snackbar=(title,icon)=>{
+    swal.fire({
+        title:title,
+        icon:icon,
+        timer:2000,
+        confirmButtonColor:"#00ff00",
+    })
+}
+
 const temptodo=(arr)=>{
     let result=`<ul class="list-group">`;
 
@@ -28,8 +52,8 @@ const temptodo=(arr)=>{
         return `<li class="list-group-item d-flex justify-content-between" id="${todo.todoId}">
                     <span>${todo.todoitem}</span>
                     <span>
-                        <i class="fa-solid fa-pen-to-square text-primary"></i>
-                        <i class="fa-solid fa-trash text-danger"></i>
+                        <i class="fa-solid editBtn fa-pen-to-square text-primary" onclick="onEdit(this)"></i>
+                        <i class="fa-solid removeBtn fa-trash text-danger" onclick="onRemove(this)"></i>
                     </span>    
                 `
     }).join("");
@@ -64,8 +88,8 @@ const onTodoForm=(ele)=>{
         list.innerHTML=`
                     <span>${todoObj.todoitem}</span>
                     <span>
-                        <i class="fa-solid fa-pen-to-square text-primary"></i>
-                        <i class="fa-solid fa-trash text-danger"></i>
+                        <i class="fa-solid fa-pen-to-square text-primary" onclick="onEdit(this)"></i>
+                        <i class="fa-solid fa-trash text-danger" onclick="onRemove(this)"></i>
                     </span> 
     
     
@@ -76,13 +100,46 @@ const onTodoForm=(ele)=>{
         temptodo(todoArr);
     }
 
+    snackbar(`the  ${todoObj.todoitem} is added successFully!`, `success`);
+
     localStorage.setItem("todoArr", JSON.stringify(todoArr));
     ele.target.reset();
 
-    cl(todoObj);
+    
+}
+
+const onUpdateBtn=()=>{
+
+    let updateId=localStorage.getItem("editId");
+
+    cl(updateId);
+    let updateObj={
+        todoitem:todoitemControl.value,
+        todoId:updateId,
+    }
+
+    let getIndex=todoArr.findIndex(todo=> todo.todoId===updateId);
+
+    todoArr[getIndex]=updateObj
+    
+
+    localStorage.setItem("todoArr", JSON.stringify(todoArr));
+
+    let list=document.getElementById(updateId).firstElementChild;
+
+    list.innerHTML=`<span>${updateObj.todoitem}</span>`;
+
+    
+
+    AddBtn.classList.remove("d-none");
+    updateBtn.classList.add("d-none");
+
+    snackbar(`this todolist ${updateObj.todoitem} is successFully!`, `success`);
+
+    todoForm.reset();
 }
 
 
 
-
 todoForm.addEventListener("submit", onTodoForm);
+updateBtn.addEventListener("click", onUpdateBtn);
